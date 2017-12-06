@@ -53,7 +53,7 @@ router.post('/', function(req, res, next){
         }
 
         mongo.connect(url, function(err, db){ 
-            assert.equal(null, err); 
+            assert.equal(null, err);
             
             var found = db.collection('Usuarios').findOne({'user' : req.body.jsonContent, 'password' : crypto.createHmac('sha256', secret).update(req.body.password).digest('hex')}, function(err, oRetrieved){
             if(!oRetrieved){ 
