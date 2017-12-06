@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>{{ title }}</title>
+    <script src="/javascripts/jquery-3.2.1.min.js"></script>
+    <script src="/javascripts/profile.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <meta http-equiv="Content-Type" content="text/html;charset=ISO-8859-8">
+
+    <nav>
+        <b><a id="userNameSending">{{userName}}</a></b>
+        <a> esta chateando con: </a>
+        <b><a  hidden id="userWhoRecibe">{{userToSend}}</a></b>
+        <b><a id="userToSend">{{userToSend}}</a></b>
+      
+        <div id="navbarSupportedContent">
+          <a href="/profile/logout"><button>Cerrar Sesion</button></a>
+        </div>
+      </nav>
+  </head>
+  <body>
+    <h1>{{ title }}</h1>
+    <h1 hidden id="userToSend"></h1>
+    <h1 hidden  id="userName">{{userName}}</h1>
+    
+    <div>
+      <div >
+          <div>
+              <h4>Usuarios:</h4>
+              <ul id="usersList">
+                  
+              </ul>
+          </div>
+          <div >
+              <input id="search" type="search" placeholder="Buscar Mensaje">
+              <ul id="usersMessages">
+                  
+              </ul>
+            <input type="text" placeholder="Escribe un mensaje..." id="messageToSend">
+            <form action="" id="fileUploadForm" onSubmit="enviarDatos(); return false" method="post" enctype='multipart/form-data'>
+              <input type="file" name="fileName" id="upload">
+              <input id="attach" type="submit" placeholder="Enviar archivo">
+            </form>
+          </div>
+      </div>
+      <textarea hidden rows="10" resize="none" readonly id="messages" cols="10">
+        </textarea>
+        
+    
+    </div>
+    <h1 id="userNameLogin"></h1>
+    <script>
+      $(function(){
+        var socket = io.connect();
+        var $message = $('#messageToSend');
+
+        $(document).ready(function(){
+          console.log('Esta adentro '+$(userNameSending).html());
+        });
+
+        $(document).keypress(function(e) {
+          if(e.which == 13) {
+            if($(messageToSend).is(':focus')){
+            if(!$(messageToSend).val()) return;
+              console.log('Mensaje: '+$(messageToSend).val());
+              socket.emit('send message', $(messageToSend).val());
+            }
+          }
+        });
+
+        $(fileUploadForm).submit(function(){
+          var archivo = $(fileNameUploaded).html()+' <a href="/profile/download/'+$(fileNameUploaded).html()+'>'+'<button>Download</button></a>';
+          console.log("Archivo: "+archivo);
+          socket.emit('send message', archivo);
+        });
+
+        socket.on('new message',function(messageSent){
+          if($(userToSend).html()==='Porfavor seleccionar a una persona para chatear') return;
+          console.log("Este es el mensaje = >"+messageSent.msg);
+          console.log('COMPARE: '+$(userWhoRecibe).html()+"...."+$(userToSend).html());
+          if($(userWhoRecibe).html() === $(userToSend).html()){
+            $(usersMessages).append('<li>'+messageSent.msg+'</li>');
+          }
+        });
+
+        socket.on('decide', function(userToDecide){
+          if($(userToSend).html() === 'Porfavor seleccionar a una persona para chatear') return;
+          
+          socket.emit('message sent');
+        });
+
+        $( "ul" ).click(function() {
+        });
+        
+      });
+    </script>
+  </body>
+</html>
