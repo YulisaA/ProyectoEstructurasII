@@ -4,7 +4,8 @@ var moment = require('moment');
 var mongo = require('mongodb').MongoClient;
 var objectId = require('mongodb').ObjectId;
 var assert = require('assert'); 
-//var crypto = require('crypto');
+const crypto = require('crypto');
+const secret = 'hjkl';
 
 var url = 'mongodb://localhost:27017/test'
 
@@ -28,7 +29,7 @@ router.get('/', function(req, res, next) {
   router.post('/', function(req, res, next){
     var users = {
       user: req.body.jsonContent,
-      password: (req.body.password),     
+      password : crypto.createHmac('sha256', secret).update(req.body.password).digest('hex')  
     }
     
     mongo.connect(url, function(err, db){

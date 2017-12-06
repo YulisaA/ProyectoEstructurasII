@@ -5,7 +5,8 @@ let jwt = require('jsonwebtoken');
 var mongo = require('mongodb').MongoClient;
 var objectId = require('mongodb').ObjectId;
 var assert = require('assert'); 
-//var crypto = require('crypto');
+const crypto = require('crypto');
+const secret = 'hjkl';
 
 var url = 'mongodb://localhost:27017/test'
 
@@ -26,7 +27,8 @@ if (typeof localStorage === "undefined" || localStorage === null) {
  }
 
 router.post('/', function(req, res, next){  
-   key = req.body.password;
+   key = crypto.createHmac('sha256', secret).update(req.body.password).digest('hex')
+
    let token = '';
    let myContent = {
         content : req.body.jsonContent,         
@@ -53,22 +55,16 @@ router.post('/', function(req, res, next){
         mongo.connect(url, function(err, db){ 
             assert.equal(null, err); 
             
-
-            var found = db.collection('Usuarios').findOne({'user' : req.body.jsonContent, 'password' : req.body.password}, function(err, oRetrieved){
+            var found = db.collection('Usuarios').findOne({'user' : req.body.jsonContent, 'password' : crypto.createHmac('sha256', secret).update(req.body.password).digest('hex')}, function(err, oRetrieved){
             if(!oRetrieved){ 
               console.log("entro al if")
-              console.error(err); 
-              res.redirect('/'); 
+              console.error("usuario no encontrado."); 
             } else {
               console.log("Usuario encontrado.")
 
               } 
             });
-          
-
-
-        });
-        
+        });     
     });
     }
     
