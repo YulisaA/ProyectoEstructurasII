@@ -55,11 +55,13 @@
 			method: 'POST',
 			data: {"user": $('#jsonContent').val() , "pass": $('#password').val()},
 			success: function(res){
-				console.log('entre aquí');
+				if(res.success){
+					//vamos a llamar a la nueva vista
+				}else{
+					alert('datos incorrectos');
+				}
 			}
-
 		});
-
 	}
 
 </script>
