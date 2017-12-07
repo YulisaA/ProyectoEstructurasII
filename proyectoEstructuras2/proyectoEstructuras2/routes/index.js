@@ -6,7 +6,7 @@ mongoose.connect('mongodb://127.0.0.1/usuarios', {
   useMongoClient: true});
 var User = require('../models/usuarios');
 const crypto = require('crypto');
-const secret = 'abcdefg';
+const secret = 'proyecto';
 
 var jwt_express = require('express-jwt');
 var jwt = require('jwt-simple');

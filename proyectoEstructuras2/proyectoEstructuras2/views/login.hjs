@@ -8,7 +8,6 @@
 
   <body>
     <div>
-
       <div>
         <div id="signup">   
           <h1>Registrarse</h1>
@@ -20,7 +19,6 @@
               </label>
               <input type="text"id="txtUserName" name="userName" required autocomplete="off" />
             
-        
              <div hidden>
                 <label>
                 Nombre<span></span>
@@ -29,8 +27,6 @@
             </div>
           </div>
 
-          
-          
           <div>
             <label>
               Contraseña <span></span>
@@ -47,26 +43,21 @@
         <div id="login">   
           <h1>Bienvenido</h1>
           
-          <form action="/profile" method="post">
-          
             <div>
             <label>
                 Nombre de usuario <span></span>
               </label>
-              <input type="text"id="txtUserName" name="userNameLogin" required autocomplete="off" />
+              <input type="text" id="txtUserName" name="userNameLogin" required autocomplete="off" />
             </div>
           
           <div>
             <label>
               Contraseña<span></span>
             </label>
-            <input type="password" name="passwordLogin" required autocomplete="off"/>
+            <input id="txtUserPass" type="password" name="passwordLogin" required autocomplete="off"/>
           </div>
           
-          
-          <button/>Ingresar</button>
-          
-          </form>
+          <button name="generateJ" class="btn btn-success" type="button" onclick="iniciarSesion();">Iniciar sesión</button><br>
 
         </div>
       </div>
@@ -74,3 +65,24 @@
     </div>
   </body>
 </html>
+
+<script type="text/javascript">
+  
+    function iniciarSesion(){
+      console.log('iniciando sesión');
+  
+      $.ajax({
+        url: '/userl',
+        type: 'json',
+        method: 'POST',
+        data: {"user": $('#txtUserName').val() , "pass": $('#txtUserPass').val()},
+        success: function(res){
+          console.log(res + " " + res.success);
+          if(!res.success){
+            alert('datos incorrectos');
+          }
+        }
+      });
+    }
+  
+  </script>
